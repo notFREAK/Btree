@@ -9,6 +9,11 @@ class Btree {
 private:
 	Node* head;
 public:
+	Btree();
+	~Btree();
+	void Insert(int);
+	void Delete(int);
+	void Search(int)
 	//конструктор
 	//деструктор
 	//добавление
