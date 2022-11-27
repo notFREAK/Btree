@@ -1,8 +1,10 @@
 #include "Btree.h"
 
-Btree::Btree()
+Btree::Btree(int order, int heigth)
 {
-	head = new Node;
+	this->order = order;
+	this->heigth = heigth;
+	head = new Node(order);
 }
 
 Btree::~Btree()
@@ -12,7 +14,13 @@ Btree::~Btree()
 
 void Btree::Insert(int key)
 {
+	if (head->keys_count < order) {
+		head->key_add(key);
+	}
+	else
+	{
 
+	}
 }
 
 void Btree::Delete(int key)
