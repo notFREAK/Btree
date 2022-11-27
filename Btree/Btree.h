@@ -16,10 +16,5 @@ public:
 	~Btree();
 	void Insert(int);
 	void Delete(int);
-	void Search(int)
-	//конструктор
-	//деструктор
-	//добавление
-	//удаление
-	//поиск
+	void Search(int);
 };
