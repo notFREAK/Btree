@@ -1,17 +1,17 @@
 #pragma once
 
-#include <fstream>
+#include <iostream>
+#include "Node.h"
 
 using namespace std;
 
 class Btree {
-	class Node {
-	private:
-		//массив значений
-		//массив указателей
-		//конструктор
-		//деструктор
-	}; //указатель на главный узел
- 	//
-	
+private:
+	Node* head;
+public:
+	//конструктор
+	//деструктор
+	//добавление
+	//удаление
+	//поиск
 };
