@@ -4,14 +4,13 @@ class Node {
 private:
 	int* keys;
 	Node** childrens;
-	int keys_count, childrens_count, order;
-	Node* father;
-	Node();
-	Node(int);
-	Node(int, Node*);
+	int keys_count, order;
+	bool leaf;
+	Node(int, bool);
 	~Node();
 	friend class Btree;
-	Node& Search(int);
-	void childrens_add(int);
-	void key_add(int);
+	void Traverse();
+	Node* Search(int);
+	void Split(int, Node);
+	void Insert(int);
 };
