@@ -12,7 +12,8 @@ private:
 public:
 	Btree(int);
 	~Btree();
+	void Traverse();
 	void Insert(int);
 	void Delete(int);
-	void Search(int);
+	Node* Search(int);
 };

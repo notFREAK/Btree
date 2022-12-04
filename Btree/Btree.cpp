@@ -8,18 +8,47 @@ Btree::Btree(int order)
 
 Btree::~Btree()
 {
-	delete head;
+	if (head != nullptr)
+		delete head;
 }
 
-void Btree::Insert(int key)
+void Btree::Traverse()
 {
-	
+    if (head != nullptr) 
+		head->Traverse();
 }
 
-void Btree::Delete(int key)
+Node* Btree::Search(int k)
 {
+	if (head == nullptr)
+		return nullptr;
+	else
+		head->Search(k);
 }
 
-void Btree::Search(int key)
+void Btree::Insert(int k)
 {
+    if (head == nullptr)
+    {
+        head = new Node(order, true);
+        head->keys[0] = k;  
+        head->keys_count = 1; 
+    }
+    else 
+    {
+        if (head->keys_count == 2 * order - 1)
+        {
+            Node* newNode = new Node(order, false);
+            newNode->childrens[0] = head;
+            newNode->Split(0, head);
+
+            int i = 0;
+            if (newNode->keys[0] < k)
+                i++;
+            newNode->childrens[i]->Insert(k);
+            head = newNode;
+        }
+        else
+            head->Insert(k);
+    }
 }

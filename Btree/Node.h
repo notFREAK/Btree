@@ -11,6 +11,6 @@ private:
 	friend class Btree;
 	void Traverse();
 	Node* Search(int);
-	void Split(int, Node);
+	void Split(int, Node*);
 	void Insert(int);
 };
