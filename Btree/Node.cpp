@@ -40,13 +40,10 @@ Node* Node::Search(int key) {
 		return this;
 	}
 	else {
-		try {
+		if (!leaf)
 			return childrens[i]->Search(key);
-		}
-		catch (...) {
-			cout << "Error node searth" << endl;
+		else
 			return nullptr;
-		}
 	}
 }
 
@@ -94,3 +91,4 @@ void Node::Insert(int k)
 		childrens[i + 1]->Insert(k);
 	}
 }
+
