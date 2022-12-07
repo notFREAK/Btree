@@ -1,4 +1,5 @@
 #include "Btree.h"
+#include "File.h"
 
 int main() {
     Btree t(3);
@@ -10,9 +11,5 @@ int main() {
     t.Insert(30);
     t.Insert(7);
     t.Insert(17);
-    t.Traverse();
-    int k = 6;
-    (t.Search(k) != NULL) ? cout << "\nPresent" : cout << "\nNot Present";
-    k = 15;
-    (t.Search(k) != NULL) ? cout << "\nPresent" : cout << "\nNot Present";
+    return 0;
 }

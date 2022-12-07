@@ -1,30 +1,29 @@
-#include "Btree.h"
+#include "Node.h"
 
 Btree::Btree(int order)
 {
 	this->order = order;
-	head = nullptr;
+	head = NULL;
+	FileIndex->open("C:/Users/video/source/repos/notFREAK/Btree/Btree");
 }
 
 Btree::~Btree()
 {
-	if (head != nullptr)
-		delete head;
 }
 
 void Btree::Traverse()
 {
-    if (head != nullptr) 
-		head->Traverse();
+	if (head != NULL)
+		FileIndex->ReadNode(head)->Traverse();
 }
 
-Node* Btree::Search(int k)
-{
-	if (head == nullptr)
-		return nullptr;
-	else
-		head->Search(k);
-}
+//Node* Btree::Search(int k)
+//{
+//	if (head == nullptr)
+//		return nullptr;
+//	else
+//		return head->Search(k);
+//}
 
 void Btree::Insert(int k)
 {

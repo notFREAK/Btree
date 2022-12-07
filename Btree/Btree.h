@@ -1,19 +1,21 @@
 #pragma once
-
-#include <iostream>
-#include "Node.h"
-
-using namespace std;
+#define pointer uint64_t
+#define keytype int 
+#include "File.h"
 
 class Btree {
-private:
-	int order;
-	Node* head;
+protected:
 public:
+	File* FileIndex;
+	friend class File;
+	friend class Node;
+	pointer head;
+	int order;
 	Btree(int);
+	Btree(string);
 	~Btree();
 	void Traverse();
 	void Insert(int);
 	void Delete(int);
-	Node* Search(int);
+	//	Node* Search(int);
 };
