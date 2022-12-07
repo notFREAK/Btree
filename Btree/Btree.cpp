@@ -52,3 +52,23 @@ void Btree::Insert(int k)
             head->Insert(k);
     }
 }
+
+void Btree::Delete(int k)
+{
+    if (!head)
+    {
+        cout << "The tree is empty\n";
+        return;
+    }
+    head->Delete(k);
+    if (head->keys_count == 0)
+    {
+        Node* tmp = head;
+        if (head->leaf)
+            head = NULL;
+        else
+            head = head->childrens[0];
+        delete tmp;
+    }
+    return;
+}

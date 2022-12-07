@@ -7,10 +7,17 @@ private:
 	int keys_count, order;
 	bool leaf;
 	Node(int, bool);
-	~Node();
 	friend class Btree;
 	void Traverse();
 	Node* Search(int);
 	void Split(int, Node*);
 	void Insert(int);
+	int FindKey(int);
+	int getPred(int);
+	int getSucc(int);
+	void Fill(int);
+	void BorrowFromPrev(int);
+	void BorrowFromNext(int);
+	void Merge(int);
+	void Delete(int);
 };
