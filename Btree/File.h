@@ -1,11 +1,6 @@
 #pragma once
-#include <iostream>
-#include <fstream>
+#include "Node.h"
 
-using namespace std;
-
-#define pointer streampos 
-#define keytype int 
 
 class File {
 private:
@@ -15,8 +10,5 @@ private:
 public:
 	File(string);
 	~File();
-	bool WritePtr(pointer, pointer);
-	pointer ReadPtr(pointer);
-	bool WriteKey(pointer, keytype);
-	keytype ReadKey(pointer);
+	
 };

@@ -1,4 +1,12 @@
 #pragma once
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+#define pointer streampos 
+#define keytype int 
+#include "Btree.h"
+
 
 class Node {
 private:
