@@ -1,19 +1,22 @@
 #pragma once
-
+#include <iostream>
 #include <fstream>
 
 using namespace std;
 
-#define pointer uint16_t 
-#define key uint16_t 
+#define pointer streampos 
+#define keytype int 
 
 class File {
 private:
-	string filename;
+    fstream file;
+	string filepath;
 	pointer str;
 public:
+	File(string);
+	~File();
 	bool WritePtr(pointer, pointer);
 	pointer ReadPtr(pointer);
-	bool WriteKey(pointer, key);
-	key ReadKey(pointer);
+	bool WriteKey(pointer, keytype);
+	keytype ReadKey(pointer);
 };

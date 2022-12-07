@@ -1,22 +1,48 @@
 #include "File.h"
 
-bool File::WritePtr(pointer, pointer)
+File::File(string filepath)
 {
+	this->filepath = filepath;
+	try {
+		file.open(filepath, ios::in | ios::out | ios::binary);
+	}
+	catch( ios_base::failure & e) {
+		cerr << e.what() << endl; 
+		exit(1);
+	}
+}
 
+File::~File()
+{
+	file.close();
+}
+
+bool File::WritePtr(pointer ptr, pointer key)
+{
+	file.seekg(ptr);
+	file << key;
 	return false;
 }
 
-pointer File::ReadPtr(pointer)
+pointer File::ReadPtr(pointer ptr)
 {
-	return pointer();
+	file.seekg(ptr);
+	unsigned long long int tmp;
+	file >> tmp;
+	return tmp;
 }
 
-bool File::WriteKey(pointer, key)
+bool File::WriteKey(pointer ptr, keytype key)
 {
+	file.seekg(ptr);
+	file << key;
 	return false;
 }
 
-key File::ReadKey(pointer)
+keytype File::ReadKey(pointer ptr)
 {
-	return key();
+	file.seekg(ptr);
+	keytype tmp;
+	file >> tmp;
+	return tmp;
 }
