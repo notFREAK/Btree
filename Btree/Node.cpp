@@ -15,7 +15,7 @@ Node::Node(int order, bool leaf)    //Создаем узел с размером и указанием листов
 	keys_count = 0;
 }
 
-Node::Node(int order, bool leaf, File* file)    //Создаем узел с размером и указанием листовой ли узел 
+Node::Node(int order, bool leaf, File file)    //Создаем узел с размером и указанием листовой ли узел 
 {
 	try {
 		keys = new keytype[order];
@@ -28,6 +28,7 @@ Node::Node(int order, bool leaf, File* file)    //Создаем узел с размером и указ
 	this->leaf = leaf;
 	keys_count = 0;
 	thisobj = 0;
+	IFile = file;
 }
 
 
