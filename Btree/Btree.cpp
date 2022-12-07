@@ -4,55 +4,57 @@ Btree::Btree(int order, string path)
 {
 	this->order = order;
 	head = NULL;
-	IndexFile->open(path);
+	IndexFile = new File(order, path);
 }
 
 Btree::~Btree()
 {
-	if (head != nullptr)
-		delete head;
+	delete IndexFile;
 }
 
-//void Btree::Traverse()
-//{
-//    if (head != nullptr) 
-//		head->Traverse();
-//}
-//
-//Node* Btree::Search(int k)
-//{
-//	if (head == nullptr)
-//		return nullptr;
-//	else
-//		head->Search(k);
-//}
-//
-//void Btree::Insert(int k)
-//{
-//    if (head == nullptr)
-//    {
-//        head = new Node(order, true);
-//        head->keys[0] = k;  
-//        head->keys_count = 1; 
-//    }
-//    else 
-//    {
-//        if (head->keys_count == 2 * order - 1)
-//        {
-//            Node* newNode = new Node(order, false);
-//            newNode->childrens[0] = head;
-//            newNode->Split(0, head);
-//
-//            int i = 0;
-//            if (newNode->keys[0] < k)
-//                i++;
-//            newNode->childrens[i]->Insert(k);
-//            head = newNode;
-//        }
-//        else
-//            head->Insert(k);
-//    }
-//}
+void Btree::Traverse()
+{
+    if (head != NULL) 
+	IndexFile->readNode(head)->Traverse();
+}
+
+Node* Btree::Search(int k)
+{
+	if (head == NULL)
+		return nullptr;
+	else
+        return IndexFile->readNode(head)->Search(k);
+}
+
+void Btree::Insert(int k)
+{
+    if (head == NULL)
+    {
+        Node* node = new Node(order, true);
+        node->keys[0] = k;  
+        node->keys_count = 1; 
+        IndexFile->writeNode(0, ios::beg, node);
+        head = 0;
+    }
+    else 
+    {
+        Node* node = IndexFile->readNode(this->head);
+        if (node->keys_count == 2 * order - 1)
+        {
+            Node* newNode = new Node(order, false);
+            newNode->childrens[0] = head;
+            newNode->Split(0, node);
+
+            int i = 0;
+            if (newNode->keys[0] < k)
+                i++;
+            IndexFile->readNode(newNode->childrens[i])->Insert(k);
+            head = newNode->thisobj;
+        }
+        else
+            IndexFile->readNode(head)->Insert(k);
+    }
+}
 //
 //void Btree::Delete(int k)
 //{

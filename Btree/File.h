@@ -1,15 +1,17 @@
 #pragma once
-#include "Node.h"
 
+class Node;
+class Btree;
 
 class File {
 private:
     fstream file;
 	string filepath;
-	pointer str;
+	int order;
 public:
-	File();
+	File(int, string);
 	~File();
-	void open(string filepath);
-	
+	void open(string);
+	Node* writeNode(pointer, ios_base::seekdir, Node*);
+	Node* readNode(pointer);
 };

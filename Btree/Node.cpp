@@ -1,91 +1,129 @@
-//#include "Node.h"
-//#include "Btree.h"
-//
-//Node::Node(int order, bool leaf)    //Создаем узел с размером и указанием листовой ли узел 
-//{
-//	try {
-//		keys = new int[order];
-//		childrens = new Node * [order + 1];
-//	}
-//	catch (...) {
-//		 cout << "Error memory allocation" << endl;
-//	}
-//	this->order = order;
-//	this->leaf = leaf;
-//	keys_count = 0;
-//}
-//
-//void Node::Traverse() {      //Обход дерева
-//	int i;
-//	for (i = 0; i < keys_count; i++)
-//	{
-//		if (leaf == false)
-//			childrens[i]->Traverse();
-//		cout << " " << keys[i];
-//	}
-//	if (leaf == false)
-//		childrens[i]->Traverse();
-//}
-//
-//Node* Node::Search(int key) {  //Поиск ключа
-//	int i = 0;
-//	for (; i < keys_count && keys[i] < key; i++);
-//	if (keys[i] == key) {
-//		return this;
-//	}
-//	else {
-//		if (!leaf)
-//			return childrens[i]->Search(key);
-//		else
-//			return nullptr;
-//	}
-//}
-//
-//void Node::Split(int i, Node* root)   //Разделение дочернего узла root если он переполнился
-//{
-//	Node* newChildren = new Node(root->order, root->leaf);
-//	newChildren->keys_count = order - 1;
-//	for (int j = 0; j < order - 1; j++)
-//		newChildren->keys[j] = root->keys[j + order];
-//	if (root->leaf == false)
-//	{
-//		for (int j = 0; j < order; j++)
-//			newChildren->childrens[j] = root->childrens[j + order];
-//	}
-//	root->keys_count = order - 1;
-//	for (int j = keys_count; j >= i + 1; j--)
-//		childrens[j + 1] = childrens[j];
-//	childrens[i + 1] = newChildren;
-//	for (int j = keys_count - 1; j >= i; j--)
-//		keys[j + 1] = keys[j];
-//	keys[i] = root->keys[order - 1];
-//	keys_count = keys_count + 1;
-//}
-//
-//void Node::Insert(int k)  //Добавление узла
-//{
-//	int i = keys_count - 1;
-//
-//	if (leaf == true)
-//	{
-//		for (;i >= 0 && keys[i] > k; i--)
-//			keys[i + 1] = keys[i];
-//		keys[i + 1] = k;
-//		keys_count = keys_count+ 1;
-//	}
-//	else
-//	{
-//		for (; i >= 0 && keys[i] > k; i--);
-//		if (childrens[i + 1]->keys_count == 2 * order - 1)
-//		{
-//			Split(i + 1, childrens[i + 1]);
-//			if (keys[i + 1] < k)
-//				i++;
-//		}
-//		childrens[i + 1]->Insert(k);
-//	}
-//}
-//
+#include "Node.h"
+#include "Btree.h"
+
+Node::Node(int order, bool leaf)    //Создаем узел с размером и указанием листовой ли узел 
+{
+	try {
+		keys = new keytype[order];
+		childrens = new pointer[order + 1];
+	}
+	catch (...) {
+		 cout << "Error memory allocation" << endl;
+	}
+	this->order = order;
+	this->leaf = leaf;
+	thisobj = 0;
+	keys_count = 0;
+}
+
+Node::Node(int order, bool leaf, File* file)    //Создаем узел с размером и указанием листовой ли узел 
+{
+	try {
+		keys = new keytype[order];
+		childrens = new pointer[order + 1];
+	}
+	catch (...) {
+		cout << "Error memory allocation" << endl;
+	}
+	this->order = order;
+	this->leaf = leaf;
+	keys_count = 0;
+	thisobj = 0;
+}
+
+
+Node::~Node() {
+	if (keys != NULL) {
+		delete keys;
+	}
+	if (childrens != NULL) {
+		delete childrens;
+	}
+}
+
+void Node::Traverse() {      //Обход дерева
+	int i;
+	for (i = 0; i < keys_count; i++)
+	{
+		if (leaf == false) {
+			Node* tempa = IndexFile->readNode(childrens[i]);
+			tempa->Traverse();
+		}
+		cout << " " << keys[i];
+	}
+	if (leaf == false) {
+		Node* tempa = IndexFile->readNode(childrens[i]);
+		tempa->Traverse();
+	}
+}
+
+Node* Node::Search(int key) {  //Поиск ключа
+	int i = 0;
+	for (; i < keys_count && keys[i] < key; i++);
+	if (keys[i] == key) {
+		return this;
+	}
+	else {
+		if (!leaf) {
+			Node* tempa = IndexFile->readNode(childrens[i]);
+			return tempa->Search(key);
+		}
+			
+		else
+			return nullptr;
+	}
+}
+
+void Node::Split(int i, Node* root)   //Разделение дочернего узла root если он переполнился
+{
+	Node* newChildren = new Node(root->order, root->leaf);
+	newChildren->keys_count = order - 1;
+	for (int j = 0; j < order - 1; j++)
+		newChildren->keys[j] = root->keys[j + order];
+	if (root->leaf == false)
+	{
+		for (int j = 0; j < order; j++)
+			newChildren->childrens[j] = root->childrens[j + order];
+	}
+	IndexFile->writeNode(0, ios::end, newChildren);
+	root->keys_count = order - 1;
+	for (int j = keys_count; j >= i + 1; j--)
+		childrens[j + 1] = childrens[j];
+	childrens[i + 1] = newChildren->thisobj;
+	for (int j = keys_count - 1; j >= i; j--)
+		keys[j + 1] = keys[j];
+	keys[i] = root->keys[order - 1];
+	keys_count = keys_count + 1;
+	IndexFile->writeNode(root->thisobj, ios::beg, root);
+}
+
+void Node::Insert(int k)  //Добавление узла
+{
+	int i = keys_count - 1;
+
+	if (leaf == true)
+	{
+		for (;i >= 0 && keys[i] > k; i--)
+			keys[i + 1] = keys[i];
+		keys[i + 1] = k;
+		keys_count = keys_count+ 1;
+	}
+	else
+	{
+		for (; i >= 0 && keys[i] > k; i--);
+		Node* temp = IndexFile->readNode(childrens[i + 1]);
+		if (temp->keys_count == 2 * order - 1)
+		{
+			Split(i + 1, temp);
+			if (keys[i + 1] < k)
+				i++;
+		}
+		temp->Insert(k);
+		delete temp;
+	}
+	IndexFile->writeNode(this->thisobj, ios::beg, this);
+}
+
 //int Node::FindKey(int k)  //Индекс ключа, который больше или равен ключу
 //{
 //    int idx = 0;

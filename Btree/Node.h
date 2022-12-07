@@ -1,21 +1,20 @@
 #pragma once
-#include <iostream>
-#include <fstream>
-using namespace std;
 
-#define pointer uint64_t
-#define keytype int 
-#include "Btree.h"
-
+class Btree;
+class File;
 
 class Node {
 private:
-	int* keys;
-	Node** childrens;
+	static File* IndexFile;
+	keytype* keys;
+	pointer* childrens;
+	pointer thisobj;
 	int keys_count, order;
 	bool leaf;
 	Node(int, bool);
+	Node(int, bool, File*);
 	friend class Btree;
+	friend class File;
 	void Traverse();
 	Node* Search(int);
 	void Split(int, Node*);
@@ -28,4 +27,6 @@ private:
 	void BorrowFromNext(int);
 	void Merge(int);
 	void Delete(int);
+public:
+	~Node();
 };
