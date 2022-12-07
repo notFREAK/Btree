@@ -1,5 +1,9 @@
 #include "File.h"
 
+File::File()
+{
+}
+
 File::File(int order, string filepath) {
 	this->order = order;
 	this->filepath = filepath;

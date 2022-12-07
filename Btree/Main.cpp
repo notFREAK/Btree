@@ -1,11 +1,5 @@
-#include <iostream>
-#include <fstream>
-#define pointer uint64_t
-#define keytype int 
-using namespace std;
-#include "File.h"
-#include "Btree.h"
-#include "Node.h"
+#include "Header.h"
+
 
 int main() {
     Btree t(3, "C:/Users/video/source/repos/notFREAK/Btree/Btree/Index.txt");

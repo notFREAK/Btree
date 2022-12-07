@@ -1,14 +1,11 @@
 #pragma once
-
-class Node;
-class File;
+#include "Header.h"
 
 class Btree {
 private:
 	int order;
 	pointer head;
 	File* IndexFile;
-	friend class Node;
 public:
 	Btree(int, string);
 	~Btree();

@@ -1,20 +1,20 @@
 #pragma once
+#include "Header.h"
 
-class Btree;
 class File;
-
 class Node {
 private:
-	static File* IndexFile;
+	static File IFile;
+	File* IndexFile;
 	keytype* keys;
 	pointer* childrens;
 	pointer thisobj;
 	int keys_count, order;
 	bool leaf;
+	friend class File;
+	friend class Btree;
 	Node(int, bool);
 	Node(int, bool, File*);
-	friend class Btree;
-	friend class File;
 	void Traverse();
 	Node* Search(int);
 	void Split(int, Node*);

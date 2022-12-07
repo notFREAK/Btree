@@ -1,14 +1,14 @@
 #pragma once
+#include "Header.h"
 
 class Node;
-class Btree;
-
 class File {
 private:
-    fstream file;
+	fstream file;
 	string filepath;
 	int order;
 public:
+	File();
 	File(int, string);
 	~File();
 	void open(string);
