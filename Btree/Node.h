@@ -3,7 +3,7 @@
 #include <fstream>
 using namespace std;
 
-#define pointer streampos 
+#define pointer uint64_t
 #define keytype int 
 #include "Btree.h"
 

@@ -8,7 +8,8 @@ private:
 	string filepath;
 	pointer str;
 public:
-	File(string);
+	File();
 	~File();
+	void open(string filepath);
 	
 };
