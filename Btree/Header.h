@@ -4,6 +4,7 @@
 #define keytype int 
 #include <iostream>
 #include <fstream>
+#include <ctime>
 using namespace std;
 #include "File.h";
 #include "Node.h";

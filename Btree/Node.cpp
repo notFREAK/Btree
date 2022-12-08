@@ -104,6 +104,7 @@ void Node::Split(int i, Node* root)   //Разделение дочернего узла root если он п
 		keys[j + 1] = keys[j];
 	keys[i] = root->keys[order - 1];
 	keys_count = keys_count + 1;
+	delete newChildren;
 	IndexFile->writeNode(root->thisobj, ios::beg, root);
 	IndexFile->writeNode(this->thisobj, ios::beg, this);
 }
@@ -122,21 +123,19 @@ void Node::Insert(int k)  //Добавление узла
 	}
 	else
 	{
-		this->Print();
 		for (; i >= 0 && keys[i] > k; i--);
 		i++;
 		Node* temp = IndexFile->readNode(childrens[i]);
-		temp->Print();
 		if (temp->keys_count == 2 * order - 1)
 		{
 			Split(i, temp);
 			if (keys[i] < k)
 				i++;
 		}
+		IndexFile->writeNode(this->thisobj, ios::beg, this);
 		IndexFile->writeNode(temp->thisobj, ios::beg, temp);
 		delete temp;
 		temp = IndexFile->readNode(childrens[i]);
-		temp->Print();
 		temp->Insert(k);
 		delete temp;
 	}

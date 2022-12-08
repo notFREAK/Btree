@@ -79,7 +79,7 @@ Node* File::readNode(pointer ptr)
 		file->read((char*)&node->childrens[i], sizeof(pointer));
 		file->read((char*)&node->keys[i], sizeof(keytype));
 	}
-	file->read((char*)&node->childrens[order], sizeof(pointer));
+	file->read((char*)&node->childrens[2*order], sizeof(pointer));
 	for (int i = 0; i < 2*order; i++)
 	{
 		if (node->keys[i] != 0) {
