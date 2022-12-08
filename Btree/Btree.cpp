@@ -36,7 +36,6 @@ void Btree::Insert(int k)
         IndexFile->writePtr(0, 0);
         IndexFile->writeNode(sizeof(pointer), ios::beg, node);
         head = sizeof(pointer);
-        node->Print();
     }
     else 
     {
@@ -45,8 +44,9 @@ void Btree::Insert(int k)
         {
             Node* newNode = new Node(order, false);
             newNode->childrens[0] = head;
+            newNode->IndexFile = IndexFile;
+            IndexFile->writeNode(0, ios::end, newNode);
             newNode->Split(0, node);
-
             int i = 0;
             if (newNode->keys[0] < k)
                 i++;
@@ -55,10 +55,8 @@ void Btree::Insert(int k)
             IndexFile->writePtr(0, head);
         }
         else {
-            node->Print();
             node->Insert(k);
         }
-        node->Print();
     }
 }
 //

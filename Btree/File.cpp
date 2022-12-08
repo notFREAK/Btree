@@ -60,7 +60,7 @@ Node* File::writeNode(pointer ptr, ios_base::seekdir dir, Node* node)
 	}
 	file->write((char*)&node->childrens[i], sizeof(pointer));
 	pointer tmp = NULL;
-	for (; i < node->order; i++)
+	for (; i < 2*node->order; i++)
 	{
 		file->write((char*)&tmp, sizeof(pointer));
 		file->write((char*)&tmp, sizeof(keytype));
@@ -74,13 +74,13 @@ Node* File::readNode(pointer ptr)
 	Node* node = new Node(this->order, true);
 	node->thisobj = ptr;
 	node->IndexFile = this;
-	for (int i = 0; i < node->order; i++)
+	for (int i = 0; i < 2*node->order; i++)
 	{
 		file->read((char*)&node->childrens[i], sizeof(pointer));
 		file->read((char*)&node->keys[i], sizeof(keytype));
 	}
 	file->read((char*)&node->childrens[order], sizeof(pointer));
-	for (int i = 0; i < order; i++)
+	for (int i = 0; i < 2*order; i++)
 	{
 		if (node->keys[i] != 0) {
 			node->keys_count = i + 1;

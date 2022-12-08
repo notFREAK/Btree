@@ -3,18 +3,18 @@
 Node::Node(int order, bool leaf)    //Создаем узел с размером и указанием листовой ли узел 
 {
 	try {
-		keys = new keytype[order];
-		childrens = new pointer[order + 1];
+		keys = new keytype[2*order];
+		childrens = new pointer[2*order + 1];
 	}
 	catch (...) {
 		 cout << "Error memory allocation" << endl;
 	}
-	for (int i = 0; i < order; i++)
+	for (int i = 0; i < 2*order; i++)
 	{
 		keys[i] = 0; 
 		childrens[i] = 0;
 	}
-	childrens[order] = 0;
+	childrens[2*order] = 0;
 	this->order = order;
 	this->leaf = leaf;
 	thisobj = 0;
@@ -29,7 +29,7 @@ Node::Node(int order, bool leaf, File* file) : Node(order, leaf)  //Создаем узел
 void Node::Print()
 {
 	cout << childrens[0];
-	for (int i = 0; i < order; i++)
+	for (int i = 0; i < 2*order; i++)
 	{
 		cout << ' ' << keys[i] << ' ';
 		cout << childrens[i + 1];
@@ -84,6 +84,7 @@ void Node::Split(int i, Node* root)   //Разделение дочернего узла root если он п
 {
 	Node* newChildren = new Node(root->order, root->leaf);
 	newChildren->keys_count = order - 1;
+	newChildren->IndexFile = IndexFile;
 	for (int j = 0; j < order - 1; j++)
 		newChildren->keys[j] = root->keys[j + order];
 	if (root->leaf == false)
@@ -91,6 +92,7 @@ void Node::Split(int i, Node* root)   //Разделение дочернего узла root если он п
 		for (int j = 0; j < order; j++)
 			newChildren->childrens[j] = root->childrens[j + order];
 	}
+	newChildren->keys_count;
 	IndexFile->writeNode(0, ios::end, newChildren);
 	root->keys_count = order - 1;
 	for (int j = keys_count; j >= i + 1; j--)
@@ -101,6 +103,7 @@ void Node::Split(int i, Node* root)   //Разделение дочернего узла root если он п
 	keys[i] = root->keys[order - 1];
 	keys_count = keys_count + 1;
 	IndexFile->writeNode(root->thisobj, ios::beg, root);
+	IndexFile->writeNode(this->thisobj, ios::end, this);
 }
 
 void Node::Insert(int k)  //Добавление узла
@@ -128,7 +131,6 @@ void Node::Insert(int k)  //Добавление узла
 		temp->Insert(k);
 		delete temp;
 	}
-	Print();
 	IndexFile->writeNode(this->thisobj, ios::beg, this);
 }
 
