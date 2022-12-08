@@ -54,12 +54,14 @@ void Node::Traverse() {      //Обход дерева
 		if (leaf == false) {
 			Node* tempa = IndexFile->readNode(childrens[i]);
 			tempa->Traverse();
+			delete tempa;
 		}
 		cout << " " << keys[i];
 	}
 	if (leaf == false) {
 		Node* tempa = IndexFile->readNode(childrens[i]);
 		tempa->Traverse();
+		delete tempa;
 	}
 }
 

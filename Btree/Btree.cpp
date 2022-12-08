@@ -15,7 +15,7 @@ Btree::~Btree()
 void Btree::Traverse()
 {
     if (head != NULL) 
-	IndexFile->readNode(head)->Traverse();
+	    IndexFile->readNode(head)->Traverse();
 }
 
 Node* Btree::Search(int k)
@@ -36,6 +36,7 @@ void Btree::Insert(int k)
         IndexFile->writePtr(0, 0);
         IndexFile->writeNode(sizeof(pointer), ios::beg, node);
         head = sizeof(pointer);
+        delete node;
     }
     else 
     {
@@ -57,6 +58,7 @@ void Btree::Insert(int k)
         else {
             node->Insert(k);
         }
+        delete node;
     }
 }
 //
