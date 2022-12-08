@@ -30,11 +30,13 @@ void Btree::Insert(int k)
 {
     if (head == NULL)
     {
-        Node* node = new Node(order, true);
+        Node* node = new Node(order, true, IndexFile);
         node->keys[0] = k;  
         node->keys_count = 1; 
-        IndexFile->writeNode(0, ios::beg, node);
-        head = 0;
+        IndexFile->writePtr(0, 0);
+        IndexFile->writeNode(sizeof(pointer), ios::beg, node);
+        head = sizeof(pointer);
+        node->Print();
     }
     else 
     {
@@ -50,9 +52,13 @@ void Btree::Insert(int k)
                 i++;
             IndexFile->readNode(newNode->childrens[i])->Insert(k);
             head = newNode->thisobj;
+            IndexFile->writePtr(0, head);
         }
-        else
-            IndexFile->readNode(head)->Insert(k);
+        else {
+            node->Print();
+            node->Insert(k);
+        }
+        node->Print();
     }
 }
 //

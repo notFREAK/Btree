@@ -4,7 +4,6 @@
 class File;
 class Node {
 private:
-	static File IFile;
 	File* IndexFile;
 	keytype* keys;
 	pointer* childrens;
@@ -15,6 +14,7 @@ private:
 	friend class Btree;
 	Node(int, bool);
 	Node(int, bool, File*);
+	void Print();
 	void Traverse();
 	Node* Search(int);
 	void Split(int, Node*);

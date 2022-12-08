@@ -9,26 +9,32 @@ Node::Node(int order, bool leaf)    //—оздаем узел с размером и указанием листов
 	catch (...) {
 		 cout << "Error memory allocation" << endl;
 	}
+	for (int i = 0; i < order; i++)
+	{
+		keys[i] = 0; 
+		childrens[i] = 0;
+	}
+	childrens[order] = 0;
 	this->order = order;
 	this->leaf = leaf;
 	thisobj = 0;
 	keys_count = 0;
 }
 
-Node::Node(int order, bool leaf, File file)    //—оздаем узел с размером и указанием листовой ли узел 
+Node::Node(int order, bool leaf, File* file) : Node(order, leaf)  //—оздаем узел с размером и указанием листовой ли узел 
 {
-	try {
-		keys = new keytype[order];
-		childrens = new pointer[order + 1];
+	IndexFile = file;
+}
+
+void Node::Print()
+{
+	cout << childrens[0];
+	for (int i = 0; i < order; i++)
+	{
+		cout << ' ' << keys[i] << ' ';
+		cout << childrens[i + 1];
 	}
-	catch (...) {
-		cout << "Error memory allocation" << endl;
-	}
-	this->order = order;
-	this->leaf = leaf;
-	keys_count = 0;
-	thisobj = 0;
-	IFile = file;
+	cout << endl;
 }
 
 
@@ -107,6 +113,7 @@ void Node::Insert(int k)  //ƒобавление узла
 			keys[i + 1] = keys[i];
 		keys[i + 1] = k;
 		keys_count = keys_count+ 1;
+		
 	}
 	else
 	{
@@ -121,6 +128,7 @@ void Node::Insert(int k)  //ƒобавление узла
 		temp->Insert(k);
 		delete temp;
 	}
+	Print();
 	IndexFile->writeNode(this->thisobj, ios::beg, this);
 }
 
