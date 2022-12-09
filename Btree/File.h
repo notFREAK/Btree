@@ -12,6 +12,8 @@ public:
 	File(int, string);
 	~File();
 	void open(string);
+	void openW();
+	void openR();
 	File& operator=(File&);
 	pointer writePtr(pointer, pointer);
 	Node* writeNode(pointer, ios_base::seekdir, Node*);
