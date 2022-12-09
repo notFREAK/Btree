@@ -14,7 +14,6 @@ File::File(int order, string filepath) {
 		cerr << e.what() << endl;
 		exit(1);
 	}
-	file->close();
 }
 
 File::~File()
@@ -34,28 +33,6 @@ void File::open(string filepath)
 	}
 }
 
-void File::openW()
-{
-	try {
-		file->open(filepath, ios::out | ios::binary);
-	}
-	catch (ios_base::failure& e) {
-		cerr << e.what() << endl;
-		exit(1);
-	}
-}
-
-void File::openR()
-{
-	try {
-		file->open(filepath, ios::in | ios::binary);
-	}
-	catch (ios_base::failure& e) {
-		cerr << e.what() << endl;
-		exit(1);
-	}
-}
-
 File& File::operator=(File& copy)
 {
 	file = copy.file;
@@ -66,16 +43,13 @@ File& File::operator=(File& copy)
 
 pointer File::writePtr(pointer ptr, pointer key)
 {
-	this->openW();
 	file->seekp(ptr, ios::beg);
 	file->write((char*)&key,sizeof(pointer));
-	file->close();
 	return key;
 }
 
 Node* File::writeNode(pointer ptr, ios_base::seekdir dir, Node* node)
 {
-	this->openW();
 	file->seekp(ptr, dir);
 	node->thisobj = file->tellp();
 	int i = 0;
@@ -91,13 +65,11 @@ Node* File::writeNode(pointer ptr, ios_base::seekdir dir, Node* node)
 		file->write((char*)&tmp, sizeof(pointer));
 		file->write((char*)&tmp, sizeof(keytype));
 	}
-	file->close();
 	return node;
 }
 
 Node* File::readNode(pointer ptr)
 {
-	this->openR();
 	file->seekg(ptr, ios::beg);
 	Node* node = new Node(this->order, true);
 	node->thisobj = ptr;
@@ -118,7 +90,6 @@ Node* File::readNode(pointer ptr)
 			node->leaf = false;
 		}
 	}
-	file->close();
 	return node;
 }
 

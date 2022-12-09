@@ -8,7 +8,7 @@ int main() {
         t.Insert(i);
     }
     t.Traverse();
-    t.Delete(12);
+    t.Delete(2);
     t.Traverse();
     return 0;
 }
