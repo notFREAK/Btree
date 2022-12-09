@@ -50,22 +50,44 @@ pointer File::writePtr(pointer ptr, pointer key)
 
 Node* File::writeNode(pointer ptr, ios_base::seekdir dir, Node* node)
 {
+	pointer a = file->tellp();
 	file->seekp(ptr, dir);
+	a = file->tellp();
 	node->thisobj = file->tellp();
 	int i = 0;
 	for (; i < node->keys_count; i++)
 	{
-		file->write((char*)&node->childrens[i], sizeof(pointer));
-		file->write((char*)&node->keys[i], sizeof(keytype));
+		try {
+			file->write((char*)&node->childrens[i], sizeof(pointer));
+			file->write((char*)&node->keys[i], sizeof(keytype));
+		}
+		catch (std::fstream::failure& writeErr) {
+			std::cerr << "\n\nException occured when writing to a file\n"
+				<< writeErr.what()
+				<< std::endl;
+			exit(1);
+		}
 	}
 	file->write((char*)&node->childrens[i], sizeof(pointer));
 	pointer tmp = NULL;
-	for (; i < 2*node->order; i++)
+	for (; i < 2*node->order - 1; i++)
 	{
 		file->write((char*)&tmp, sizeof(pointer));
 		file->write((char*)&tmp, sizeof(keytype));
 	}
 	return node;
+}
+
+void File::NULLNode(pointer ptr, ios_base::seekdir dir, int order)
+{
+	file->seekp(ptr, dir);
+	pointer tmp = NULL;
+	for (int i = 0; i < 2 * order - 1; i++)
+	{
+		file->write((char*)&tmp, sizeof(pointer));
+		file->write((char*)&tmp, sizeof(keytype));
+	}
+	file->write((char*)&tmp, sizeof(pointer));
 }
 
 Node* File::readNode(pointer ptr)
@@ -74,13 +96,13 @@ Node* File::readNode(pointer ptr)
 	Node* node = new Node(this->order, true);
 	node->thisobj = ptr;
 	node->IndexFile = this;
-	for (int i = 0; i < 2*node->order; i++)
+	for (int i = 0; i < 2*node->order-1; i++)
 	{
 		file->read((char*)&node->childrens[i], sizeof(pointer));
 		file->read((char*)&node->keys[i], sizeof(keytype));
 	}
-	file->read((char*)&node->childrens[2*order], sizeof(pointer));
-	for (int i = 0; i < 2*order; i++)
+	file->read((char*)&node->childrens[2*order - 1], sizeof(pointer));
+	for (int i = 0; i < 2*order - 1; i++)
 	{
 		if (node->keys[i] != 0) {
 			node->keys_count = i + 1;

@@ -3,18 +3,18 @@
 Node::Node(int order, bool leaf)    //—оздаем узел с размером и указанием листовой ли узел 
 {
 	try {
-		keys = new keytype[2*order];
-		childrens = new pointer[2*order + 1];
+		keys = new keytype[2*order - 1];
+		childrens = new pointer[2*order];
 	}
 	catch (...) {
 		 cout << "Error memory allocation" << endl;
 	}
-	for (int i = 0; i < 2*order; i++)
+	for (int i = 0; i < 2*order - 1; i++)
 	{
 		keys[i] = 0; 
 		childrens[i] = 0;
 	}
-	childrens[2*order] = 0;
+	childrens[2*order - 1] = 0;
 	this->order = order;
 	this->leaf = leaf;
 	thisobj = 0;
@@ -203,13 +203,15 @@ void Node::Delete(int k) //”даление узла
             return;
         }
         bool flag = ((idx == keys_count) ? true : false);
-        if (child->childrens[0] != 0 && child->keys_count < order)
+        if (child->childrens[0] != 0 && child->keys_count < order - 1)
             Fill(idx);
 		if (flag && idx > keys_count) {
 			if (idx - 1 >= 0 && childrens[idx - 1] != 0) {
 				prev = IndexFile->readNode(childrens[idx - 1]);
 				prev->Delete(k);
 			}
+
+
 			else {
 				cout << "error" << endl;
 			}
@@ -261,8 +263,11 @@ int Node::getSucc(int i) //¬озвращает самый маленький
 
 void Node::Fill(int idx)//заполнить удаленное место
 {
-	Node* Prev = IndexFile->readNode(childrens[idx - 1]);
-	Node* Next = IndexFile->readNode(childrens[idx + 1]);
+	Node* Prev = NULL, *Next = NULL;
+	if (idx != 0)
+		 Prev = IndexFile->readNode(childrens[idx - 1]);
+	if (idx != keys_count)
+		Next = IndexFile->readNode(childrens[idx + 1]);
     if (idx != 0 && Prev->keys_count >= order)
         BorrowFromPrev(idx);
     else if (idx != keys_count && Next->keys_count >= order)
@@ -274,8 +279,10 @@ void Node::Fill(int idx)//заполнить удаленное место
         else
             Merge(idx - 1);
     }
-	delete Prev;
-	delete Next;
+	if (Prev != NULL)
+		delete Prev;
+	if (Next != NULL)
+		delete Next;
     return;
 }
 

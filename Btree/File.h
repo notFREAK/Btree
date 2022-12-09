@@ -15,5 +15,6 @@ public:
 	File& operator=(File&);
 	pointer writePtr(pointer, pointer);
 	Node* writeNode(pointer, ios_base::seekdir, Node*);
+	void NULLNode(pointer ptr, ios_base::seekdir dir, int order);
 	Node* readNode(pointer);
 };
