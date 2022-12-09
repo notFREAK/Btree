@@ -2,14 +2,13 @@
 
 
 int main() {
-    Btree t(1000, "C:/Users/video/source/repos/notFREAK/Btree/Btree/Index.txt");
+    Btree t(5, "C:/Users/video/source/repos/notFREAK/Btree/Btree/Index.txt");
     srand(time(0));
-    for (int i = 1000; i >= 1; i--) {
-        t.Insert(rand());
+    for (int i = 1; i <= 51; i++) {
+        t.Insert(i);
     }
-
-    cout << "Traversal of the constructed tree is ";
     t.Traverse();
-    
+    t.Delete(2);
+    t.Traverse();
     return 0;
 }

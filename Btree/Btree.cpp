@@ -19,6 +19,7 @@ void Btree::Traverse()
         tmp->Traverse();
         delete tmp;
     }
+    cout << endl;
 }
 
 Node* Btree::Search(int k)
@@ -67,23 +68,29 @@ void Btree::Insert(int k)
         delete node;
     }
 }
-//
-//void Btree::Delete(int k)
-//{
-//    if (!head)
-//    {
-//        cout << "The tree is empty\n";
-//        return;
-//    }
-//    head->Delete(k);
-//    if (head->keys_count == 0)
-//    {
-//        Node* tmp = head;
-//        if (head->leaf)
-//            head = NULL;
-//        else
-//            head = head->childrens[0];
-//        delete tmp;
-//    }
-//    return;
-//}
+
+void Btree::Delete(int k)
+{
+    Node* node = IndexFile->readNode(this->head);
+    if (!head)
+    {
+        cout << "The tree is empty\n";
+        return;
+    }
+    node->Delete(k);
+    if (node->keys_count == 0)
+    {
+        Node* tmp = node;
+        if (node->leaf)
+            node = NULL;   //סעונועü פאיכ
+        else
+        {
+            head = node->childrens[0];
+            IndexFile->writePtr(0, head);
+        } 
+        delete tmp;
+        return;
+    }
+    delete node;
+    return;
+}

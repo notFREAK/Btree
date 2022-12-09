@@ -142,157 +142,218 @@ void Node::Insert(int k)  //Добавление узла
 	IndexFile->writeNode(this->thisobj, ios::beg, this);
 }
 
-//int Node::FindKey(int k)  //Индекс ключа, который больше или равен ключу
-//{
-//    int idx = 0;
-//    while (idx < keys_count && keys[idx] < k)
-//        ++idx;
-//    return idx;
-//}
-//
-//void Node::Delete(int k) //Удаление узла
-//{
-//    int idx = FindKey(k);
-//    if (idx < keys_count && keys[idx] == k)
-//    {
-//        if (leaf)  
-//        {
-//            for (int i = idx + 1; i < keys_count; ++i)
-//                keys[i - 1] = keys[i];
-//            keys_count--;
-//            }
-//        else
-//        {
-//            if (childrens[idx]->keys_count >= order)
-//            {
-//                int pred = getPred(idx);
-//                keys[idx] = pred;
-//                childrens[idx]->Delete(pred);
-//            }
-//            else if (childrens[idx + 1]->keys_count >= order)
-//            {
-//                int succ = getSucc(idx);
-//                keys[idx] = succ;
-//                childrens[idx + 1]->Delete(succ);
-//            }
-//            else
-//            {
-//                Merge(idx);
-//                childrens[idx]->Delete(k);
-//            }
-//        }
-//    }
-//    else
-//    {
-//        if (leaf)
-//        {
-//            cout << "The key " << k << " is does not exist in the tree\n";
-//            return;
-//        }
-//        bool flag = ((idx == keys_count) ? true : false);
-//        if (childrens[idx]->keys_count < order)
-//            Fill(idx);
-//        if (idx == keys_count && idx > keys_count)
-//            childrens[idx - 1]->Delete(k);
-//        else
-//            childrens[idx]->Delete(k);
-//    }
-//    return;
-//}
-//
-//int Node::getPred(int idx) //Возвращает самый большой ключи
-//{
-//    Node* cur = childrens[idx];
-//    while (!cur->leaf)
-//        cur = cur->childrens[cur->keys_count];
-//    return cur->keys[cur->keys_count - 1];
-//}
-//
-//int Node::getSucc(int idx) //Возвращает самый маленький
-//{
-//    Node* cur = childrens[idx + 1];
-//    while (!cur->leaf)
-//        cur = cur->childrens[0];
-//    return cur->keys[0];
-//}
-//
-//void Node::Fill(int idx)//заполнить удаленное место
-//{
-//    if (idx != 0 && childrens[idx - 1]->keys_count >= order)
-//        BorrowFromPrev(idx);
-//    else if (idx != keys_count && childrens[idx + 1]->keys_count >= order)
-//        BorrowFromNext(idx);
-//    else
-//    {
-//        if (idx != keys_count)
-//            Merge(idx);
-//        else
-//            Merge(idx - 1);
-//    }
-//    return;
-//}
-//
-//void Node::BorrowFromPrev(int idx) //Возместить ключ из узла слева
-//{
-//
-//    Node* child = childrens[idx];
-//    Node* sibling = childrens[idx - 1];
-//    for (int i = child->keys_count - 1; i >= 0; --i)
-//        child->keys[i + 1] = child->keys[i];
-//    if (!child->leaf)
-//    {
-//        for (int i = child->keys_count; i >= 0; --i)
-//            child->childrens[i + 1] = child->childrens[i];
-//    }
-//    child->keys[0] = keys[idx - 1];
-//    if (!child->leaf)
-//        child->childrens[0] = sibling->childrens[sibling->keys_count];
-//    keys[idx - 1] = sibling->keys[sibling->keys_count - 1];
-//    child->keys_count += 1;
-//    sibling->keys_count -= 1;
-//    return;
-//}
-//
-//void Node::BorrowFromNext(int idx) //возместить из узла справа
-//{
-//
-//    Node* child = childrens[idx];
-//    Node* sibling = childrens[idx + 1];
-//    child->keys[(child->keys_count)] = keys[idx];
-//    if (!(child->leaf))
-//        child->childrens[(child->keys_count) + 1] = sibling->childrens[0];
-//    keys[idx] = sibling->keys[0];
-//    for (int i = 1; i < sibling->keys_count; ++i)
-//        sibling->keys[i - 1] = sibling->keys[i];
-//    if (!sibling->leaf)
-//    {
-//        for (int i = 1; i <= sibling->keys_count; ++i)
-//            sibling->childrens[i - 1] = sibling->childrens[i];
-//    }
-//    child->keys_count += 1;
-//    sibling->keys_count -= 1;
-//    return;
-//}
-//
-//void Node::Merge(int idx) //Cлияние
-//{
-//    Node* child = childrens[idx];
-//    Node* sibling = childrens[idx + 1];
-//    child->keys[order - 1] = keys[idx];
-//    for (int i = 0; i < sibling->keys_count; ++i)
-//        child->keys[i + order] = sibling->keys[i];
-//    if (!child->leaf)
-//    {
-//        for (int i = 0; i <= sibling->keys_count; ++i)
-//            child->childrens[i + order] = sibling->childrens[i];
-//    }
-//    for (int i = idx + 1; i <keys_count; ++i)
-//        keys[i - 1] = keys[i];
-//    for (int i = idx + 2; i <=keys_count; ++i)
-//        childrens[i - 1] = childrens[i];
-//    child->keys_count += sibling->keys_count + 1;
-//    keys_count--;
-//    delete(sibling);
-//    return;
-//}
-//
+int Node::FindKey(int k)  //Индекс ключа, который больше или равен ключу
+{
+    int idx = 0;
+    while (idx < keys_count && keys[idx] < k)
+       ++idx;
+    return idx;
+}
+
+void Node::Delete(int k) //Удаление узла
+{
+    int idx = FindKey(k);
+	Node* child = NULL, * next = NULL, * prev = NULL;
+	
+    if (idx < keys_count && keys[idx] == k)
+    {
+        if (leaf)  
+        {
+            for (int i = idx + 1; i < keys_count; ++i)
+                keys[i - 1] = keys[i];
+            keys_count--;
+            }
+        else
+        {
+			if (childrens[idx] != 0)
+			child = IndexFile->readNode(childrens[idx]);
+            if (child->keys_count >= order)
+            {
+                int pred = getPred(idx);
+                keys[idx] = pred;
+				child->Delete(pred);
+            }
+			else
+			{
+				if (childrens[idx + 1] != 0) {
+					next = IndexFile->readNode(childrens[idx + 1]);
+					if (next->keys_count >= order)
+					{
+						int succ = getSucc(idx);
+						keys[idx] = succ;
+						next->Delete(succ);
+					}
+					else
+					{
+						Merge(idx);
+						child->Delete(k);
+					}
+				}
+			}
+        }
+    }
+    else
+    {
+		if (childrens[idx] != 0)
+			child = IndexFile->readNode(childrens[idx]);
+				
+        if (leaf)
+        {
+            cout << "The key " << k << " is does not exist in the tree\n";
+            return;
+        }
+        bool flag = ((idx == keys_count) ? true : false);
+        if (child->childrens[0] != 0 && child->keys_count < order)
+            Fill(idx);
+		if (flag && idx > keys_count) {
+			if (idx - 1 >= 0 && childrens[idx - 1] != 0) {
+				prev = IndexFile->readNode(childrens[idx - 1]);
+				prev->Delete(k);
+			}
+			else {
+				cout << "error" << endl;
+			}
+		}
+        else
+			child->Delete(k);
+    }
+	IndexFile->writeNode(this->thisobj, ios::beg, this);
+	if (child != NULL) {
+		IndexFile->writeNode(child->thisobj, ios::beg, child);
+		delete child;
+	}
+	if (next != NULL) {
+		IndexFile->writeNode(next->thisobj, ios::beg, next);
+		delete next;
+	}
+	if (prev != NULL) {
+		IndexFile->writeNode(prev->thisobj, ios::beg, prev);
+		delete prev;
+	}
+	return;
+}
+
+int Node::getPred(int i) //Возвращает самый большой ключи
+{
+    Node* cur = IndexFile->readNode(childrens[i]); 
+	while (!cur->leaf) {
+		pointer tmp = cur->childrens[cur->keys_count];
+		delete cur;
+		cur = IndexFile->readNode(tmp);
+	}
+	keytype key = cur->keys[cur->keys_count - 1];
+	delete cur;
+	return key;
+}
+
+int Node::getSucc(int i) //Возвращает самый маленький
+{
+	Node* cur = IndexFile->readNode(childrens[i + 1]);
+	while (!cur->leaf) {
+		pointer tmp = cur->childrens[0];
+		delete cur;
+		cur = IndexFile->readNode(tmp);
+	}
+	keytype key = cur->keys[0];
+	delete cur;
+	return key;
+}
+
+void Node::Fill(int idx)//заполнить удаленное место
+{
+	Node* Prev = IndexFile->readNode(childrens[idx - 1]);
+	Node* Next = IndexFile->readNode(childrens[idx + 1]);
+    if (idx != 0 && Prev->keys_count >= order)
+        BorrowFromPrev(idx);
+    else if (idx != keys_count && Next->keys_count >= order)
+        BorrowFromNext(idx);
+    else
+    {
+        if (idx != keys_count)
+            Merge(idx);
+        else
+            Merge(idx - 1);
+    }
+	delete Prev;
+	delete Next;
+    return;
+}
+
+void Node::BorrowFromPrev(int idx) //Возместить ключ из узла слева
+{
+
+    Node* child = IndexFile->readNode(childrens[idx]);
+    Node* sibling = IndexFile->readNode(childrens[idx - 1]);
+    for (int i = child->keys_count - 1; i >= 0; --i)
+        child->keys[i + 1] = child->keys[i];
+    if (!child->leaf)
+    {
+        for (int i = child->keys_count; i >= 0; --i)
+            child->childrens[i + 1] = child->childrens[i];
+    }
+    child->keys[0] = keys[idx - 1];
+    if (!child->leaf)
+        child->childrens[0] = sibling->childrens[sibling->keys_count];
+    keys[idx - 1] = sibling->keys[sibling->keys_count - 1];
+    child->keys_count += 1;
+	sibling->keys_count -= 1;
+	IndexFile->writeNode(this->thisobj, ios::beg, this);
+	IndexFile->writeNode(child->thisobj, ios::beg, child);
+	IndexFile->writeNode(sibling->thisobj, ios::beg, sibling);
+	delete child;
+	delete sibling;
+    return;
+}
+
+void Node::BorrowFromNext(int idx) //возместить из узла справа
+{
+
+	Node* child = IndexFile->readNode(childrens[idx]);
+	Node* sibling = IndexFile->readNode(childrens[idx + 1]);
+    child->keys[(child->keys_count)] = keys[idx];
+    if (!(child->leaf))
+        child->childrens[(child->keys_count) + 1] = sibling->childrens[0];
+    keys[idx] = sibling->keys[0];
+    for (int i = 1; i < sibling->keys_count; ++i)
+        sibling->keys[i - 1] = sibling->keys[i];
+    if (!sibling->leaf)
+    {
+        for (int i = 1; i <= sibling->keys_count; ++i)
+            sibling->childrens[i - 1] = sibling->childrens[i];
+    }
+    child->keys_count += 1;
+    sibling->keys_count -= 1;
+	IndexFile->writeNode(this->thisobj, ios::beg, this);
+	IndexFile->writeNode(child->thisobj, ios::beg, child);
+	IndexFile->writeNode(sibling->thisobj, ios::beg, sibling);
+	delete child;
+	delete sibling;
+    return;
+}
+
+void Node::Merge(int idx) //Cлияние
+{
+	Node* child = IndexFile->readNode(childrens[idx]);
+	Node* sibling = IndexFile->readNode(childrens[idx + 1]);
+    child->keys[order - 1] = keys[idx];
+    for (int i = 0; i < sibling->keys_count; ++i)
+        child->keys[i + order] = sibling->keys[i];
+    if (!child->leaf)
+    {
+        for (int i = 0; i <= sibling->keys_count; ++i)
+            child->childrens[i + order] = sibling->childrens[i];
+    }
+    for (int i = idx + 1; i <keys_count; ++i)
+        keys[i - 1] = keys[i];
+    for (int i = idx + 2; i <=keys_count; ++i)
+        childrens[i - 1] = childrens[i];
+    child->keys_count += sibling->keys_count + 1;
+    keys_count--;
+	IndexFile->writeNode(this->thisobj, ios::beg, this);
+	IndexFile->writeNode(child->thisobj, ios::beg, child);
+	delete child;
+	delete sibling;
+    return;
+}
+
+
