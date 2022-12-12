@@ -8,19 +8,8 @@ int main() {
         t.Insert(i);
     }
     t.Traverse();
-    t.Delete(3);
-    t.Traverse();
-    for (int i = 1; i <= 20; i++) {
-        t.Insert(i);
-    }
-    t.Traverse();
     t.Delete(9);
     t.Traverse();
-    /*for (int i = 1; i <= 51; i++) {
-        cout << "delete " << i << ':';
-        t.Delete(i);
-        t.Traverse();
-        t.Insert(i);
-    }*/
+
     return 0;
 }

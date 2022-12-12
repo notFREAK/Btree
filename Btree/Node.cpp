@@ -186,6 +186,8 @@ void Node::Delete(int k) //Удаление узла
 					else
 					{
 						Merge(idx);
+						delete child;
+						child = IndexFile->readNode(childrens[idx]);
 						child->Delete(k);
 					}
 				}
@@ -196,22 +198,19 @@ void Node::Delete(int k) //Удаление узла
     {
 		if (childrens[idx] != 0)
 			child = IndexFile->readNode(childrens[idx]);
-				
         if (leaf)
         {
             cout << "The key " << k << " is does not exist in the tree\n";
             return;
         }
         bool flag = ((idx == keys_count) ? true : false);
-        if (child->childrens[0] != 0 && child->keys_count < order - 1)
+        if (child != NULL && child->childrens[0] != 0 && child->keys_count < order - 1)
             Fill(idx);
 		if (flag && idx > keys_count) {
 			if (idx - 1 >= 0 && childrens[idx - 1] != 0) {
 				prev = IndexFile->readNode(childrens[idx - 1]);
 				prev->Delete(k);
 			}
-
-
 			else {
 				cout << "error" << endl;
 			}
@@ -220,13 +219,13 @@ void Node::Delete(int k) //Удаление узла
 			child->Delete(k);
     }
 	IndexFile->writeNode(this->thisobj, ios::beg, this);
-	if (child != NULL) {
-		IndexFile->writeNode(child->thisobj, ios::beg, child);
-		delete child;
-	}
 	if (next != NULL) {
 		IndexFile->writeNode(next->thisobj, ios::beg, next);
 		delete next;
+	}
+	if (child != NULL) {
+		IndexFile->writeNode(child->thisobj, ios::beg, child);
+		delete child;
 	}
 	if (prev != NULL) {
 		IndexFile->writeNode(prev->thisobj, ios::beg, prev);
@@ -356,10 +355,9 @@ void Node::Merge(int idx) //Cлияние
         childrens[i - 1] = childrens[i];
     child->keys_count += sibling->keys_count + 1;
     keys_count--;
-	IndexFile->writeNode(this->thisobj, ios::beg, this);
 	IndexFile->writeNode(child->thisobj, ios::beg, child);
-	delete child;
-	delete sibling;
+	IndexFile->writeNode(this->thisobj, ios::beg, this);
+	IndexFile->writeNode(this->thisobj, ios::beg, this);
     return;
 }
 

@@ -50,9 +50,9 @@ pointer File::writePtr(pointer ptr, pointer key)
 
 Node* File::writeNode(pointer ptr, ios_base::seekdir dir, Node* node)
 {
+	file->flush();
 	pointer a = file->tellp();
 	file->seekp(ptr, dir);
-	a = file->tellp();
 	node->thisobj = file->tellp();
 	int i = 0;
 	for (; i < node->keys_count; i++)
@@ -60,6 +60,7 @@ Node* File::writeNode(pointer ptr, ios_base::seekdir dir, Node* node)
 		try {
 			file->write((char*)&node->childrens[i], sizeof(pointer));
 			file->write((char*)&node->keys[i], sizeof(keytype));
+			a = file->tellp();
 		}
 		catch (std::fstream::failure& writeErr) {
 			std::cerr << "\n\nException occured when writing to a file\n"
